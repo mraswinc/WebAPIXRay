@@ -1,4 +1,4 @@
-﻿Eusing Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
@@ -23,7 +23,7 @@ namespace WebAPIXRay.Controllers
 
         private List<Student> GetStudents()
         {
-            string connectionString = @"data source=NZXT-3700X; database=StudentDB; integrated security=SSPI";
+            string connectionString = @"data source={Server}; database=StudentDB; integrated security=SSPI";
             // Create a SqlConnection object
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -46,8 +46,6 @@ namespace WebAPIXRay.Controllers
 
                 if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
                 {
-                    
-
                     foreach(DataRow row in dataSet.Tables[0].Rows)
                     {
                         var student = new Student
