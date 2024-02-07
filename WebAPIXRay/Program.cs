@@ -8,37 +8,18 @@ using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//// Add OpenTelemetry
-//var tracerProvider = Sdk.CreateTracerProviderBuilder()
-//                        .AddSource("WebAPIXray")
-//                        .AddXRayTraceId() // for generating AWS X-Ray compliant trace IDs
-//                        .AddOtlpExporter() // default address localhost:4317
-//                        .AddAspNetCoreInstrumentation()
-//                        .SetResourceBuilder(ResourceBuilder
-//                            .CreateDefault()
-//                            .AddDetector(new AWSEC2ResourceDetector()))
-//                        .Build();
-
-//var meterProvider = Sdk.CreateMeterProviderBuilder()
-//                        .AddMeter("adot")
-//                        .AddOtlpExporter()
-//                        .Build();
-
-//Sdk.SetDefaultTextMapPropagator(new AWSXRayPropagator()); // configure AWS X-Ray propagator
-
 // Add services to the container.
 builder.Services.AddOpenTelemetry()
     .WithTracing(builder => builder
-        .AddAspNetCoreInstrumentation()
         .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("AWSOtelWebAPI"))
         .AddXRayTraceId() // for generating AWS X-Ray compliant trace IDs
-        .AddOtlpExporter()
+        .AddOtlpExporter() // to export to OpenTelemetry Collector
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
         .AddSqlClientInstrumentation()
         .AddAWSInstrumentation());
 
-Sdk.SetDefaultTextMapPropagator(new AWSXRayPropagator());
+Sdk.SetDefaultTextMapPropagator(new AWSXRayPropagator()); //Set Map in AWS X-ray
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
